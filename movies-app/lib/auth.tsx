@@ -1,7 +1,11 @@
+"use client";
+
 import Cookies from "js-cookie";
 import Router from "next/router";
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 
 export const storeAuthToken = ({data}) => {
+  // const router = useRouter()
   if (typeof window === "undefined") {
     return;
   }
@@ -9,9 +13,9 @@ export const storeAuthToken = ({data}) => {
   Cookies.set("username", data.user.username);
   Cookies.set("jwt", data.jwt);
 
-  if (Cookies.get("username")) {
-    Router.push("/");
-  }
+  // if (Cookies.get("username")) {
+  //   router.push("/");
+  // }
 };
 
 export const removeAuthToken = () => {
@@ -22,10 +26,11 @@ export const removeAuthToken = () => {
   Cookies.remove("jwt");
   Cookies.remove("username");
 
-  Router.push("/");
+  // Router.push("/");
 };
 
 export const getUserFromLocalCookie = () => {
+  console.log(Cookies.get("username"));
   return Cookies.get("username");
 };
 
