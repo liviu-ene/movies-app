@@ -18,14 +18,11 @@
     "title": {
       "type": "string"
     },
-    "movieId": {
-      "type": "biginteger"
-    },
-    "users_permissions_user": {
+    "user": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "reviews"
+      "inversedBy": "review"
     }
   }
 }

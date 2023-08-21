@@ -12,7 +12,7 @@ import styles from "./LoginForm.module.css";
 
 export default function LoginForm() {
   const [data, setData] = useState({ identifier: "", password: "" });
-  const { user, loading } = useUser();
+  const { user } = useUser();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {

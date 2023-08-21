@@ -62,7 +62,7 @@ export default function MovieCard(props: any) {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <ReviewForm />
+              <ReviewForm title={title}/>
             </Modal>
             <Popover
               id="reviewPopover"
