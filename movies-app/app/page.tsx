@@ -1,5 +1,5 @@
 
-import MovieCard from "@/components/MovieCard";
+import MovieCard from "@/components/MovieCard/MovieCard";
 import NavBar from "@/components/NavBar";
 import { getPopularMovies } from "@/lib/api";
 import { UserProvider, useUser } from "@/lib/authContext";

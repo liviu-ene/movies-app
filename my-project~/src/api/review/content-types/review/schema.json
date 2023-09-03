@@ -20,9 +20,9 @@
     },
     "user": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "review"
+      "inversedBy": "reviews"
     }
   }
 }

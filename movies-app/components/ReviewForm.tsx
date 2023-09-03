@@ -2,31 +2,63 @@ import { useState } from "react";
 import axios from "axios";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { getIdFromLocalCookie, getTokenFromLocalCookie } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
-export default function ReviewForm({ title }) {
+interface ReviewFormProps {
+  title: string;
+  requestType: string;
+  reviewId?: number
+}
+
+export default function ReviewForm(props: ReviewFormProps) {
+  const { title, requestType, reviewId } = props;
   const [description, setDescription] = useState("");
   const jwt = getTokenFromLocalCookie();
   const user = getIdFromLocalCookie();
-  const handleSubmit = async (e) => {
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}/reviews`,
-      {
-        data: {
-          title,
-          description,
-          user,
+    if (requestType === "POST") {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_STRAPI_URL}/reviews`,
+        {
+          data: {
+            title,
+            description,
+            user,
+          },
         },
-      }, {
-        headers: {
-          Authorization: `Bearer ${jwt}`
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
         }
-      }
-    );
-    console.log(response);
+      );
+      router.push("/reviews");
+    }
+
+    if (requestType === "PUT") {
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_STRAPI_URL}/reviews/${reviewId}`,
+        {
+          data: {
+            title,
+            description,
+            user,
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+      window.location.reload();
+    }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value);
   };
 

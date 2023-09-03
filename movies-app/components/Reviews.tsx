@@ -3,7 +3,7 @@
 import { getIdFromLocalCookie, getTokenFromLocalCookie } from "@/lib/auth";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import ReviewsList from "./ReviewsList";
+import ReviewsList from "./ReviewsList/ReviewsList";
 
 export default function Reviews() {
   const [reviews, setReviews] = useState([]);
@@ -21,10 +21,11 @@ export default function Reviews() {
           },
         }
       );
-      const movieReviews = response.data.data.filter(
-        (review) =>
-          review.attributes.user.data && review.attributes.user.data.id === parseInt(user)
-      );
+      const movieReviews = response.data.data.filter((review: any) => {
+        if (user) {
+          return review.attributes.user?.data?.id === parseInt(user);
+        }
+      });
       setReviews(movieReviews);
     };
 
@@ -33,5 +34,9 @@ export default function Reviews() {
 
   console.log(reviews);
 
-  return <div><ReviewsList reviews={reviews}/></div>;
+  return (
+    <div>
+      <ReviewsList reviews={reviews} />
+    </div>
+  );
 }

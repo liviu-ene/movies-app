@@ -11,17 +11,34 @@ import { posterConstructor } from "@/lib/helpers";
 
 import styles from "./MovieCard.module.css";
 import { useFetchUser } from "@/lib/authContext";
-import { useState } from "react";
-import ReviewForm from "./ReviewForm";
+import { useEffect, useRef, useState } from "react";
+import ReviewForm from "../ReviewForm";
 
 export default function MovieCard(props: any) {
-  const { title, poster_path, release_date } = props.data;
+  const {data, isLast, newLimit} = props;
+  const { title, poster_path, release_date } = data;
   const { user } = useFetchUser();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(
     null
   );
   const [modal, setModal] = useState(false);
+  const cardRef = useRef<HTMLDivElement >(null);
 
+  //Pagination
+  useEffect(() => {
+    if (!cardRef?.current) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (isLast && entry.isIntersecting) {
+        newLimit();
+        observer.unobserve(entry.target);
+      }
+    });
+
+    observer.observe(cardRef.current);
+  }, [isLast]);
+
+  //Review modal
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!user) {
       //This enables the popover
@@ -40,7 +57,7 @@ export default function MovieCard(props: any) {
 
   const year = release_date?.split("-")[0];
   return (
-    <Card sx={{ maxWidth: 300 }}>
+    <Card sx={{ maxWidth: 300 }} ref={cardRef}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -62,7 +79,7 @@ export default function MovieCard(props: any) {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <ReviewForm title={title}/>
+              <ReviewForm title={title} requestType='POST'/>
             </Modal>
             <Popover
               id="reviewPopover"

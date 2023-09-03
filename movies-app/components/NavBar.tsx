@@ -14,7 +14,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import LoginForm from "./LoginForm";
+import LoginForm from "./LoginForm/LoginForm";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/lib/authContext";

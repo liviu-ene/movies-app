@@ -1,4 +1,4 @@
-import MovieCard from "@/components/MovieCard";
+import MovieCard from "@/components/MovieCard/MovieCard";
 import { getPopularMovies } from "@/lib/api";
 
 

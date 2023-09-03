@@ -19,9 +19,9 @@ export const tmdbFetcher = (url: URL) => {
   fetch(url).then((res) => res.json());
 };
 
-export const getPopularMovies = async () => {
+export const getPopularMovies = async (page: number) => {
   try {
-    const response = await tmdbAPI.get(`movie/popular`);
+    const response = await tmdbAPI.get(`movie/popular?page=${page}`);
     return response.data.results;
   } catch (error) {
     console.error(error);

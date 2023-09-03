@@ -1,0 +1,15 @@
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 1000px;
+  padding: 12px;
+  margin: 50px auto;
+  background-color: white;
+  border-radius: 12px;
+  word-wrap: break-word;
+}
+
+.reviewItem {
+  display: flex;
+}
