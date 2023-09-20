@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { useFetchUser, UserProvider } from "@/lib/authContext";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import NavBar from "@/components/NavBar";
+import { Providers } from "@/redux/provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,10 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <LayoutWrapper>
-          <NavBar />
-          {children}
-        </LayoutWrapper>
+        <Providers>
+            <NavBar />
+            {children}
+        </Providers>
       </body>
     </html>
   );

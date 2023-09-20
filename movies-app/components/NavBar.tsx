@@ -15,149 +15,34 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import LoginForm from "./LoginForm/LoginForm";
-import { Button } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/lib/authContext";
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
+import { AppDispatch, useAppSelector } from "@/redux/store";
+import { removeAuthToken } from "@/lib/auth";
+import { useDispatch } from "react-redux";
+import { logout, clearError } from "@/redux/features/authSlice";
+import { useEffect } from "react";
 
 export default function NavBar() {
-  const { user } = useUser();
   const router = useRouter();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
-
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  const dispatch = useDispatch<AppDispatch>();
+  const { user, error } = useAppSelector((state) => state.authReducer);
+  const {isLoggedIn, username} = user;
+  
+  //const { error } = useAppSelector((state) => state.authReducer);
+  const handleLogout = () => {
+    removeAuthToken();
+    dispatch(logout());
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
+  const handleAlertClose = () => {
+    dispatch(clearError());
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const menuId = "primary-search-account-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+  useEffect(() => {
+    setTimeout(handleAlertClose, 10000);
+  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -175,7 +60,7 @@ export default function NavBar() {
           >
             <HomeIcon />
           </IconButton>
-          {user && (
+          {isLoggedIn && (
             <Button
               variant="contained"
               sx={{
@@ -195,11 +80,32 @@ export default function NavBar() {
             </Button>
           )}
           <Box sx={{ flexGrow: 1 }} />
-          <LoginForm />
+          {!isLoggedIn ? (
+            <LoginForm />
+          ) : (
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "white",
+                color: "#1976d2",
+                fontWeight: "700",
+                "&:hover": {
+                  backgroundColor: "white",
+                  opacity: 0.5,
+                },
+              }}
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          )}
         </Toolbar>
+        {error && (
+          <Alert severity="error" onClose={handleAlertClose}>
+            {error}
+          </Alert>
+        )}
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
     </Box>
   );
 }

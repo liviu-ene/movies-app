@@ -1,5 +1,6 @@
 "use client";
 
+import { registerUser } from "@/redux/services/authActions";
 import {
   Box,
   Button,
@@ -11,9 +12,11 @@ import {
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 export default function RegisterForm() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [userData, setUserData] = useState({
     username: "",
     email: "",
@@ -27,16 +30,17 @@ export default function RegisterForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local/register`,
-      {
-        email: userData.email,
-        username: userData.username,
-        password: userData.password,
-      }
-    );
-    console.log(response);
-    router.push("/");
+    // const response = await axios.post(
+    //   `${process.env.NEXT_PUBLIC_STRAPI_URL}/auth/local/register`,
+    //   {
+    //     email: userData.email,
+    //     username: userData.username,
+    //     password: userData.password,
+    //   }
+    // );
+    console.log(userData);
+    dispatch(registerUser(userData))
+    //router.push("/");
   };
 
   return (

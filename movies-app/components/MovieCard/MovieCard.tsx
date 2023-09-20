@@ -13,10 +13,12 @@ import styles from "./MovieCard.module.css";
 import { useFetchUser } from "@/lib/authContext";
 import { useEffect, useRef, useState } from "react";
 import ReviewForm from "../ReviewForm";
+import { useAppSelector } from "@/redux/store";
 
 export default function MovieCard(props: any) {
   const {data, isLast, newLimit} = props;
   const { title, poster_path, release_date } = data;
+  const isLoggedIn = useAppSelector(state => state.authReducer.user.isLoggedIn);
   const { user } = useFetchUser();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(
     null
@@ -40,7 +42,7 @@ export default function MovieCard(props: any) {
 
   //Review modal
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!user) {
+    if (!isLoggedIn) {
       //This enables the popover
       setAnchorEl(event.currentTarget);
       return;

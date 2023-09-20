@@ -4,11 +4,11 @@ import Cookies from "js-cookie";
 import Router from "next/router";
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 
-export const storeAuthToken = ({data}) => {
-  // const router = useRouter()
+export const storeAuthToken = (data) => {
   if (typeof window === "undefined") {
     return;
   }
+  // const router = useRouter()
   Cookies.set("id", data.user.id);
   Cookies.set("username", data.user.username);
   Cookies.set("jwt", data.jwt);
